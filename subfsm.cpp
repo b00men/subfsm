@@ -1,26 +1,12 @@
-
-#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include "subfsm.h"
-#include <string.h>
 
 using namespace std;
 
 int main()
-{ 	
-	//longbool ar1("boollong");
-	longbool ar1;
-	cin>>ar1;
-	//cout<<"Out:\n"<< ar1<<'\n';
-	//cout<<"Size_v&t:\n"<<ar1.size_vec<<'\n'<<ar1.size_tail<<'\n';
-	//cout<<"Sizeof a0:\n"<<sizeof(ar1.a[0])<<'\n';
-	cout<<"len:\n"<<ar1.length()<<'\n';
-	//ar1.rawprint();
-	while (!ar1.plus()){
-		cout<<ar1<<'\n';
-	}
-	//ar1.rawprint();
+{ 
+	subfsm("0.fsm");
 	return 0;
 }
 
@@ -53,6 +39,14 @@ void longbool::rawprint()
 		for(int j=sizeof(a[i])*8-1;j>-1;j--) cout<<((a[i]>>j)&1);
 		cout<<'\n';
 	}
+}
+
+void longbool::false_vec(int size_bool1)
+{
+	size_tail=size_bool1%(sizeof(this->a[0])*8);
+	size_vec=size_bool1/(sizeof(this->a[0])*8)+((bool)size_tail);
+	a = new unsigned char [size_vec];
+	for (int i=0; i<size_vec; a[size_vec-i-1]=0, i++);
 }
 
 bool longbool::plus()
@@ -127,8 +121,36 @@ ostream& operator << (ostream& strm, const longbool &ar)
 	return strm;
 }
 
-void subfsm(longbool vec){
-	
+void subfsm(const char* file){
+	longbool vec;
+	string name;
+	int count=0, size=0;
+	ifstream in;
+	ofstream out;
+
+	in.open(file);
+
+	for (int i=0; i<6; i++) getline(in,name);//проитать шесть строк (пропустить)
+	while (getline(in,name)) size++; //посчитать количество оставшихся строк
+	vec.false_vec(size); //создать соответствующий битов вектор
+	//in.close();
+	in.clear();
+	in.seekg(0, ios::beg);
+
+	do { //цикл - все битовы вектора этой длины
+		//out.open(name);
+		//первые шесть строк
+		cout<<'\n';
+		for (int i=0; i<6; i++){
+			getline(in,name);
+			cout<<name<<'\n';
+		}
+		//вывести остальные строки по маске битового вектора (1 вывести, 0 не вывести) 
+		//getline (cin,name);
+		cout<<vec<<'\n';
+	} while (!vec.plus());
+
+	return;
 }
 
 void push_back(deque &l, bool k)

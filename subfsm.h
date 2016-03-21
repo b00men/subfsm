@@ -15,6 +15,7 @@ class longbool 						// Sic! Non-static data member initializers
 	int length() {return (this->size_vec*sizeof(a[0])*8-((this->size_tail)?(sizeof(a[0])*8-this->size_tail):(0)));}
 	void print() {std::cout<<*this<<'\n';}
 	void rawprint();				// 4 debug (print longbool 'as is' in memory)
+	void false_vec(int size_bool1);
 	// buffoon!
 	bool plus (); // аналог int++ ; Возвращает 1 при переполнении вектора, иначе 0
 	bool get (int k) { return ((this->a[this->size_vec-(k/(sizeof(this->a[0])*8))-1]>>k%(sizeof(this->a[0])*8))&1); }
@@ -53,4 +54,4 @@ struct deque						// Really is not deque (no *prev element) but nobody cares.
 void push_back(deque &l, bool k);
 bool dell_front(deque &l);
 void print_List(deque &l);			// 4 debug (print deque in stdout)
-void subfsm(longbool vec);
+void subfsm(const char* file);
