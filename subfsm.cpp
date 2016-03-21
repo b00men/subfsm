@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 { 
-	subfsm("0.fsm");
+	subfsm("1.fsm");
 	return 0;
 }
 
@@ -123,31 +123,34 @@ ostream& operator << (ostream& strm, const longbool &ar)
 
 void subfsm(const char* file){
 	longbool vec;
-	string name;
+	string buffer;
 	int count=0, size=0;
 	ifstream in;
 	ofstream out;
 
 	in.open(file);
 
-	for (int i=0; i<6; i++) getline(in,name);//проитать шесть строк (пропустить)
-	while (getline(in,name)) size++; //посчитать количество оставшихся строк
+	for (int i=0; i<6; i++) getline(in,buffer);//прочитать шесть строк (пропустить)
+	while (getline(in,buffer)) size++; //посчитать количество оставшихся строк
 	vec.false_vec(size); //создать соответствующий битов вектор
 	//in.close();
 	in.clear();
 	in.seekg(0, ios::beg);
 
 	do { //цикл - все битовы вектора этой длины
-		//out.open(name);
-		//первые шесть строк
+		//cout<<vec<<'\n';
 		cout<<'\n';
-		for (int i=0; i<6; i++){
-			getline(in,name);
-			cout<<name<<'\n';
+		for (int i=0; i<6; i++){ //первые шесть строк
+			getline(in,buffer);
+			cout<<buffer<<'\n';
 		}
-		//вывести остальные строки по маске битового вектора (1 вывести, 0 не вывести) 
-		//getline (cin,name);
-		cout<<vec<<'\n';
+		
+		for (int i=0; i<size; i++){ //вывести остальные строки по маске битового вектора (1 вывести, 0 не вывести) 
+			getline(in,buffer);
+			if (vec.get(i)) cout<<buffer<<'\n';
+		}
+		in.clear();
+		in.seekg(0, ios::beg);
 	} while (!vec.plus());
 
 	return;
